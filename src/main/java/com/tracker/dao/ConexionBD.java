@@ -19,7 +19,7 @@ public class ConexionBD {
     private ConexionBD() {
         String host = System.getenv("DB_HOST") != null ? System.getenv("DB_HOST") : "localhost";
         String port = System.getenv("DB_PORT") != null ? System.getenv("DB_PORT") : "5432";
-        String dbName = System.getenv("DB_NAME") != null ? System.getenv("DB_NAME") : "playlogprueba";
+        String dbName = System.getenv("DB_NAME") != null ? System.getenv("DB_NAME") : "playlog";
         this.url = "jdbc:postgresql://" + host + ":" + port + "/" + dbName;
         this.usuario = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : "postgres";
         this.password = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : "an128976";
@@ -27,7 +27,7 @@ public class ConexionBD {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("No se encontró el driver de PostgreSQL", e);
+            throw new RuntimeException("No se encontro el driver de PostgreSQL", e);
         }
     }
 

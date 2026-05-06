@@ -19,7 +19,7 @@ public class UsuarioJuego implements Serializable {
     private String resena;
     private Timestamp fechaAgregado;
 
-    //obejtos  para mostrar en vistas
+    //variabels  para mostrar en vistas
     private Usuario usuario;
     private Juego juego;
     private Plataforma plataforma;

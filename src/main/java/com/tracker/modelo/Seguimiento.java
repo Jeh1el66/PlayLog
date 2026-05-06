@@ -14,7 +14,7 @@ public class Seguimiento implements Serializable {
     private int fkSeguido;
     private Timestamp fecha;
 
-    //objetos relacionados para mostrar en vistas
+    //variables para mostrar en vistas
     private Usuario seguidor;
     private Usuario seguido;
 
