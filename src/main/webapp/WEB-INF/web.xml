@@ -12,6 +12,16 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
 
+  <!--filtro de autenticacion-->
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>com.tracker.controlador.AuthFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <request-character-encoding>UTF-8</request-character-encoding>
   <response-character-encoding>UTF-8</response-character-encoding>
 
