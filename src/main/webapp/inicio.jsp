@@ -12,7 +12,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navegación -->
+    <!--navegacion-->
     <nav class="navbar glass-nav">
         <div class="nav-container">
             <a href="${pageContext.request.contextPath}/inicio" class="nav-logo" id="navLogo">
@@ -47,7 +47,7 @@
     </nav>
 
     <main class="main-content">
-        <!-- Hero Section -->
+        <!--seccion principal-->
         <section class="hero-section">
             <div class="hero-content">
                 <h1>Bienvenido a <span class="gradient-text">PlayLog</span></h1>
