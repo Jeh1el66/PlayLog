@@ -1,0 +1,81 @@
+
+//codigo realizado con apoyo de IA
+//PlayLog — Client-side JavaScript
+
+
+//Toggle Edit Panel
+function toggleEdit(idUsuarioJuego) {
+    const panel = document.getElementById('editPanel-' + idUsuarioJuego);
+    if (panel) {
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+//Community Tabs
+function showTab(tabName) {
+    //desactivar todos los tabs
+    document.querySelectorAll('.tab-content').forEach(tc => {
+        tc.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    //activar el tab seleccionado
+    const tabContent = document.getElementById('tab-' + tabName);
+    if (tabContent) {
+        tabContent.classList.add('active');
+    }
+
+    //activar el botón correspondiente
+    const tabBtn = document.getElementById('tab' + capitalize(tabName));
+    if (tabBtn) {
+        tabBtn.classList.add('active');
+    }
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+//smooth animations on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    // Intersection Observer para animaciones al hacer scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    //observar game cards
+    document.querySelectorAll('.game-card, .library-item, .ranking-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        observer.observe(el);
+    });
+
+    //observar stat cards con delay escalonado
+    document.querySelectorAll('.stat-card').forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = `opacity 0.4s ease ${i * 0.1}s, transform 0.4s ease ${i * 0.1}s`;
+        observer.observe(el);
+    });
+
+    //search form submit on Enter
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.closest('form').submit();
+            }
+        });
+    }
+});
