@@ -11,6 +11,21 @@ function toggleEdit(idUsuarioJuego) {
     }
 }
 
+//roggle Add to Library Form
+function toggleAddForm() {
+    const panel = document.getElementById('addFormPanel');
+    const toggleBtn = document.getElementById('btnToggleAdd');
+    if (panel && toggleBtn) {
+        const isHidden = panel.style.display === 'none';
+        panel.style.display = isHidden ? 'block' : 'none';
+        toggleBtn.style.display = isHidden ? 'none' : 'inline-flex';
+        if (isHidden) {
+            panel.style.animation = 'slideDown 0.3s ease';
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+}
+
 //Community Tabs
 function showTab(tabName) {
     //desactivar todos los tabs

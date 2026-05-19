@@ -8,11 +8,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 
 //servlet para el detalle de un juego
-//GET: recibe apiId, guarda el juego si no existe, muestra detalle con géneros y plataformas
+//GET: recibe apiId, guarda el juego si no existe, muestra detalle con generos,
+//plataformas y reseniaas de la comunidad
 
 @WebServlet("/juego")
 public class JuegoDetalleServlet extends HttpServlet {
@@ -20,6 +22,7 @@ public class JuegoDetalleServlet extends HttpServlet {
     private JuegoDAO juegoDAO;
     private GeneroDAO generoDAO;
     private PlataformaDAO plataformaDAO;
+    private UsuarioJuegoDAO usuarioJuegoDAO;
     private RawgService rawgService;
 
     @Override
@@ -27,6 +30,7 @@ public class JuegoDetalleServlet extends HttpServlet {
         juegoDAO = new JuegoDAO();
         generoDAO = new GeneroDAO();
         plataformaDAO = new PlataformaDAO();
+        usuarioJuegoDAO = new UsuarioJuegoDAO();
         rawgService = new RawgService();
     }
 
@@ -69,7 +73,7 @@ public class JuegoDetalleServlet extends HttpServlet {
                 }
             }
 
-            //cargar géneros y plataformas del juego
+            //cargar generos y plataformas del juego
             List<Genero> generos = generoDAO.listarPorJuego(juego.getIdJuego());
             List<Plataforma> plataformas = plataformaDAO.listarPorJuego(juego.getIdJuego());
             juego.setGeneros(generos);
@@ -78,8 +82,12 @@ public class JuegoDetalleServlet extends HttpServlet {
             //cargar todas las plataformas para el formulario de agregar
             List<Plataforma> todasPlataformas = plataformaDAO.listarTodas();
 
+            // Cargar resenias de la comunidad para este juego
+            List<UsuarioJuego> resenasJuego = usuarioJuegoDAO.listarResenasPorJuego(juego.getIdJuego());
+
             req.setAttribute("juego", juego);
             req.setAttribute("todasPlataformas", todasPlataformas);
+            req.setAttribute("resenasJuego", resenasJuego);
 
         } catch (Exception e) {
             req.setAttribute("error", "Error al cargar el detalle del juego.");

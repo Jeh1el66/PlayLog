@@ -46,6 +46,21 @@ public class AgregarJuegoServlet extends HttpServlet {
                 uj.setFkPlataforma(Integer.parseInt(idPlataformaStr));
             }
 
+            //calificacionn del 1 al 10
+            String calStr = req.getParameter("calificacion");
+            if (calStr != null && !calStr.isBlank()) {
+                int cal = Integer.parseInt(calStr);
+                if (cal >= 1 && cal <= 10) {
+                    uj.setCalificacion(cal);
+                }
+            }
+
+            //resenia
+            String resena = req.getParameter("resena");
+            if (resena != null && !resena.isBlank()) {
+                uj.setResena(resena.trim());
+            }
+
             usuarioJuegoDAO.agregar(uj);
 
             resp.sendRedirect(req.getContextPath() + "/biblioteca");

@@ -107,9 +107,20 @@
                         </div>
                     </div>
 
-                    <!--formulario para agregar a biblioteca-->
-                    <div class="add-to-library glass-card">
-                        <h3><i class="fas fa-plus-circle"></i> Agregar a mi Biblioteca</h3>
+                    <!--btn para mostrar formulario-->
+                    <div class="add-to-library-toggle">
+                        <button type="button" class="btn btn-primary" onclick="toggleAddForm()" id="btnToggleAdd">
+                            <i class="fas fa-plus-circle"></i> Agregar a mi Biblioteca
+                        </button>
+                    </div>
+                    <!--formulario colapsable-->
+                    <div class="add-to-library glass-card" id="addFormPanel" style="display:none;">
+                        <div class="add-form-header">
+                            <h3><i class="fas fa-plus-circle"></i> Agregar a mi Biblioteca</h3>
+                            <button type="button" class="btn btn-small btn-secondary" onclick="toggleAddForm()">
+                                <i class="fas fa-times"></i> Cerrar
+                            </button>
+                        </div>
                         <form action="${pageContext.request.contextPath}/agregar-juego" method="post" class="add-form" id="addGameForm">
                             <input type="hidden" name="idJuego" value="${juego.idJuego}">
 
@@ -134,13 +145,92 @@
                                     </select>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary" id="btnAgregar">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
+                                <div class="form-group">
+                                    <label for="calificacion">Calificación (1-10)</label>
+                                    <input type="number" id="calificacion" name="calificacion" min="1" max="10"
+                                           placeholder="Opcional">
+                                </div>
                             </div>
+
+                            <div class="form-group">
+                                <label for="resena"><i class="fas fa-pen"></i> Reseña</label>
+                                <textarea id="resena" name="resena" rows="3"
+                                          placeholder="Escribe tu opinión sobre este juego (opcional)..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="btnAgregar">
+                                <i class="fas fa-plus"></i> Confirmar y Agregar
+                            </button>
                         </form>
                     </div>
                 </div>
+            </c:if>
+            <!--resenia de la Comunidad para este juego -->
+            <c:if test="${not empty juego}">
+                <section class="game-section" style="margin-top: 2rem;">
+                    <h2 class="section-title">
+                        <i class="fas fa-comments"></i> Reseñas de la Comunidad
+                        <c:if test="${not empty resenasJuego}">
+                            <span class="query-text">(${resenasJuego.size()})</span>
+                        </c:if>
+                    </h2>
+                    <div class="reviews-feed">
+                        <c:forEach var="uj" items="${resenasJuego}">
+                            <div class="review-card glass-card" id="gameReview-${uj.idUsuarioJuego}">
+                                <div class="review-card-body">
+                                    <div class="review-card-header">
+                                        <a href="${pageContext.request.contextPath}/perfil?id=${uj.fkUsuario}" class="review-user" title="Ver perfil de ${uj.usuario.nombre}">
+                                            <i class="fas fa-user-circle"></i>
+                                            <span>${uj.usuario.nombre}</span>
+                                        </a>
+                                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                                            <span class="status-badge status-${uj.estado}">
+                                                <c:choose>
+                                                    <c:when test="${uj.estado == 'JUGANDO'}">Jugando</c:when>
+                                                    <c:when test="${uj.estado == 'COMPLETADO'}">Completado</c:when>
+                                                    <c:when test="${uj.estado == 'QUIERO_JUGAR'}">Quiero Jugar</c:when>
+                                                    <c:when test="${uj.estado == 'ABANDONADO'}">Abandonado</c:when>
+                                                </c:choose>
+                                            </span>
+                                            <c:if test="${uj.calificacion != null}">
+                                                <span class="rating"><i class="fas fa-star"></i> ${uj.calificacion}/10</span>
+                                            </c:if>
+                                        </div>
+                                    </div>
+                                    <p class="review-text">${uj.resena}</p>
+                                    <div class="review-card-footer">
+                                        <div class="review-votes">
+                                            <form action="${pageContext.request.contextPath}/voto" method="post" class="inline-form">
+                                                <input type="hidden" name="idUsuarioJuego" value="${uj.idUsuarioJuego}">
+                                                <input type="hidden" name="positivo" value="true">
+                                                <input type="hidden" name="redirigir" value="/juego?apiId=${juego.apiId}">
+                                                <button type="submit" class="vote-btn vote-up" title="Me gusta">
+                                                    <i class="fas fa-thumbs-up"></i> ${uj.votosPositivos}
+                                                </button>
+                                            </form>
+                                            <form action="${pageContext.request.contextPath}/voto" method="post" class="inline-form">
+                                                <input type="hidden" name="idUsuarioJuego" value="${uj.idUsuarioJuego}">
+                                                <input type="hidden" name="positivo" value="false">
+                                                <input type="hidden" name="redirigir" value="/juego?apiId=${juego.apiId}">
+                                                <button type="submit" class="vote-btn vote-down" title="No me gusta">
+                                                    <i class="fas fa-thumbs-down"></i> ${uj.votosNegativos}
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <a href="${pageContext.request.contextPath}/perfil?id=${uj.fkUsuario}" class="review-profile-link">
+                                            Ver perfil <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                        <c:if test="${empty resenasJuego}">
+                            <div class="empty-state small">
+                                <i class="fas fa-comment-slash fa-2x"></i>
+                                <p>Aún no hay reseñas para este juego. ¡Agrégalo a tu biblioteca y sé el primero!</p>
+                            </div>
+                        </c:if>
+                    </div>
+                </section>
             </c:if>
         </div>
     </main>

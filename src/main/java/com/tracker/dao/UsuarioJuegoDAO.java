@@ -188,6 +188,80 @@ public class UsuarioJuegoDAO {
         return votos;
     }
 
+    //lista las ultimas reseñas de todos los usuarios solo registros con reseña no vacia
+    //incluye datos del usuario, juego, plataforma y conteo de votos
+    public List<UsuarioJuego> listarUltimasResenas(int limite) throws SQLException {
+        List<UsuarioJuego> lista = new ArrayList<>();
+        String sql = "SELECT uj.id_usuario_juego, uj.fk_usuario, uj.fk_juego, uj.fk_plataforma, " +
+                "uj.estado, uj.calificacion, uj.resena, uj.fecha_agregado, " +
+                "j.api_id, j.nombre AS juego_nombre, j.img_url, j.metacritic, j.fecha_lanzamiento, " +
+                "p.nombre AS plataforma_nombre, " +
+                "u.nombre AS usuario_nombre, " +
+                "COALESCE((SELECT COUNT(*) FROM voto v WHERE v.fk_usuario_juego = uj.id_usuario_juego AND v.positivo = true), 0) AS votos_pos, " +
+                "COALESCE((SELECT COUNT(*) FROM voto v WHERE v.fk_usuario_juego = uj.id_usuario_juego AND v.positivo = false), 0) AS votos_neg " +
+                "FROM usuario_juego uj " +
+                "JOIN juego j ON uj.fk_juego = j.id_juego " +
+                "JOIN usuario u ON uj.fk_usuario = u.id_usuario " +
+                "LEFT JOIN plataforma p ON uj.fk_plataforma = p.id_plataforma " +
+                "WHERE uj.resena IS NOT NULL AND uj.resena != '' " +
+                "ORDER BY uj.fecha_agregado DESC LIMIT ?";
+        try (Connection conn = ConexionBD.getInstancia().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, limite);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    UsuarioJuego uj = mapearConJuego(rs);
+                    // Setear datos del usuario
+                    Usuario usuario = new Usuario();
+                    usuario.setIdUsuario(uj.getFkUsuario());
+                    usuario.setNombre(rs.getString("usuario_nombre"));
+                    uj.setUsuario(usuario);
+                    // Setear votos
+                    uj.setVotosPositivos(rs.getInt("votos_pos"));
+                    uj.setVotosNegativos(rs.getInt("votos_neg"));
+                    lista.add(uj);
+                }
+            }
+        }
+        return lista;
+    }
+
+    //lista todas las reseñas de un juego específico con idJuego
+    //incluye datos del usuario y conteo de votos
+    public List<UsuarioJuego> listarResenasPorJuego(int idJuego) throws SQLException {
+        List<UsuarioJuego> lista = new ArrayList<>();
+        String sql = "SELECT uj.id_usuario_juego, uj.fk_usuario, uj.fk_juego, uj.fk_plataforma, " +
+                "uj.estado, uj.calificacion, uj.resena, uj.fecha_agregado, " +
+                "j.api_id, j.nombre AS juego_nombre, j.img_url, j.metacritic, j.fecha_lanzamiento, " +
+                "p.nombre AS plataforma_nombre, " +
+                "u.nombre AS usuario_nombre, " +
+                "COALESCE((SELECT COUNT(*) FROM voto v WHERE v.fk_usuario_juego = uj.id_usuario_juego AND v.positivo = true), 0) AS votos_pos, " +
+                "COALESCE((SELECT COUNT(*) FROM voto v WHERE v.fk_usuario_juego = uj.id_usuario_juego AND v.positivo = false), 0) AS votos_neg " +
+                "FROM usuario_juego uj " +
+                "JOIN juego j ON uj.fk_juego = j.id_juego " +
+                "JOIN usuario u ON uj.fk_usuario = u.id_usuario " +
+                "LEFT JOIN plataforma p ON uj.fk_plataforma = p.id_plataforma " +
+                "WHERE uj.fk_juego = ? AND uj.resena IS NOT NULL AND uj.resena != '' " +
+                "ORDER BY uj.fecha_agregado DESC";
+        try (Connection conn = ConexionBD.getInstancia().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idJuego);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    UsuarioJuego uj = mapearConJuego(rs);
+                    Usuario usuario = new Usuario();
+                    usuario.setIdUsuario(uj.getFkUsuario());
+                    usuario.setNombre(rs.getString("usuario_nombre"));
+                    uj.setUsuario(usuario);
+                    uj.setVotosPositivos(rs.getInt("votos_pos"));
+                    uj.setVotosNegativos(rs.getInt("votos_neg"));
+                    lista.add(uj);
+                }
+            }
+        }
+        return lista;
+    }
+
 
     //metodo privado para mapear el resultset a un objeto UsuarioJuego
     private UsuarioJuego mapearConJuego(ResultSet rs) throws SQLException {

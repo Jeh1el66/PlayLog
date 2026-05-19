@@ -70,6 +70,9 @@
                 <button class="tab-btn" onclick="showTab('completados')" id="tabCompletados">
                     <i class="fas fa-check-circle"></i> Más Completados
                 </button>
+                <button class="tab-btn" onclick="showTab('resenas')" id="tabResenas">
+                    <i class="fas fa-comments"></i> Últimas Reseñas
+                </button>
             </div>
 
             <!--mas desedos-->
@@ -169,6 +172,73 @@
                         </div>
                     </c:if>
                 </div>
+            </div>
+        </div>
+        <!--ultimas resenias-->
+        <div class="tab-content" id="tab-resenas">
+            <div class="reviews-feed">
+                <c:forEach var="uj" items="${ultimasResenas}">
+                    <div class="review-card glass-card" id="comReview-${uj.idUsuarioJuego}">
+                        <div class="review-card-left">
+                            <c:if test="${not empty uj.juego.imgUrl}">
+                                <a href="${pageContext.request.contextPath}/juego?apiId=${uj.juego.apiId}" class="review-game-thumb-link">
+                                    <img src="${uj.juego.imgUrl}" alt="${uj.juego.nombre}" class="review-game-thumb">
+                                </a>
+                            </c:if>
+                        </div>
+                        <div class="review-card-body">
+                            <div class="review-card-header">
+                                <a href="${pageContext.request.contextPath}/perfil?id=${uj.fkUsuario}" class="review-user" title="Ver perfil de ${uj.usuario.nombre}">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>${uj.usuario.nombre}</span>
+                                </a>
+                                <span class="status-badge status-${uj.estado}">
+                                        <c:choose>
+                                            <c:when test="${uj.estado == 'JUGANDO'}">Jugando</c:when>
+                                            <c:when test="${uj.estado == 'COMPLETADO'}">Completado</c:when>
+                                            <c:when test="${uj.estado == 'QUIERO_JUGAR'}">Quiero Jugar</c:when>
+                                            <c:when test="${uj.estado == 'ABANDONADO'}">Abandonado</c:when>
+                                        </c:choose>
+                                    </span>
+                            </div>
+                            <a href="${pageContext.request.contextPath}/juego?apiId=${uj.juego.apiId}" class="review-game-name">
+                                    ${uj.juego.nombre}
+                            </a>
+                            <c:if test="${uj.calificacion != null}">
+                                <span class="rating"><i class="fas fa-star"></i> ${uj.calificacion}/10</span>
+                            </c:if>
+                            <p class="review-text">${uj.resena}</p>
+                            <div class="review-card-footer">
+                                <div class="review-votes">
+                                    <form action="${pageContext.request.contextPath}/voto" method="post" class="inline-form">
+                                        <input type="hidden" name="idUsuarioJuego" value="${uj.idUsuarioJuego}">
+                                        <input type="hidden" name="positivo" value="true">
+                                        <input type="hidden" name="redirigir" value="/comunidad">
+                                        <button type="submit" class="vote-btn vote-up" title="Me gusta">
+                                            <i class="fas fa-thumbs-up"></i> ${uj.votosPositivos}
+                                        </button>
+                                    </form>
+                                    <form action="${pageContext.request.contextPath}/voto" method="post" class="inline-form">
+                                        <input type="hidden" name="idUsuarioJuego" value="${uj.idUsuarioJuego}">
+                                        <input type="hidden" name="positivo" value="false">
+                                        <input type="hidden" name="redirigir" value="/comunidad">
+                                        <button type="submit" class="vote-btn vote-down" title="No me gusta">
+                                            <i class="fas fa-thumbs-down"></i> ${uj.votosNegativos}
+                                        </button>
+                                    </form>
+                                </div>
+                                <a href="${pageContext.request.contextPath}/perfil?id=${uj.fkUsuario}" class="review-profile-link">
+                                    Ver perfil <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+                <c:if test="${empty ultimasResenas}">
+                    <div class="empty-state small">
+                        <p>Aún no hay reseñas. ¡Sé el primero en escribir una!</p>
+                    </div>
+                </c:if>
             </div>
         </div>
     </main>

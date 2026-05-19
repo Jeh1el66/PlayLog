@@ -2,6 +2,7 @@ package com.tracker.controlador;
 
 import com.tracker.modelo.Juego;
 import com.tracker.servicio.EstadisticasService;
+import com.tracker.modelo.UsuarioJuego;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 //servlet para la página de comunida
-//GET: muestra estadisticas globales usando EstadisticasService
+//GET: muestra estadisticas globales y ultimas reseñas usando EstadisticasService
 @WebServlet("/comunidad")
 public class ComunidadServlet extends HttpServlet {
 
@@ -30,14 +31,17 @@ public class ComunidadServlet extends HttpServlet {
             List<Juego> masDeseados = estadisticasService.juegosMasDeseados(20);
             List<Juego> mejorVotados = estadisticasService.mejoresVotados(20);
             List<Juego> masCompletados = estadisticasService.masCompletados(20);
+            List<UsuarioJuego> ultimasResenas = estadisticasService.ultimasResenas(15);
 
             req.setAttribute("masDeseados", masDeseados);
             req.setAttribute("mejorVotados", mejorVotados);
             req.setAttribute("masCompletados", masCompletados);
+            req.setAttribute("ultimasResenas", ultimasResenas);
         } catch (Exception e) {
             req.setAttribute("masDeseados", Collections.emptyList());
             req.setAttribute("mejorVotados", Collections.emptyList());
             req.setAttribute("masCompletados", Collections.emptyList());
+            req.setAttribute("ultimasResenas", Collections.emptyList());
             req.setAttribute("error", "No se pudieron cargar las estadísticas de la comunidad.");
         }
 

@@ -36,8 +36,14 @@ public class EstadisticasService {
     }
 
 
-    //obtiene las estadisticas de un usuario: conteo por estado.
+    //obtiene las estadisticas de un usuario: conteo por estado
     public Map<String, Integer> statsDeUsuario(int idUsuario) throws SQLException {
         return usuarioJuegoDAO.obtenerEstadisticas(idUsuario);
     }
+
+   //obtiene las ultimas resenas
+    public List<UsuarioJuego> ultimasResenas(int limite) throws SQLException {
+        return usuarioJuegoDAO.listarUltimasResenas(limite);
+    }
+
 }
