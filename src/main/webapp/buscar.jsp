@@ -69,12 +69,12 @@
                 </div>
             </c:if>
 
-            <c:if test="${fuenteRawg}">
+            <!-- <c:if test="${fuenteRawg}">
                 <div class="alert alert-info">
                     <i class="fas fa-globe"></i>
                     <span>Resultados obtenidos desde RAWG. Haz clic en un juego para agregarlo a tu biblioteca.</span>
                 </div>
-            </c:if>
+            </c:if> -->
 
             <div class="game-grid">
                 <c:forEach var="juego" items="${resultados}">

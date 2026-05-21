@@ -26,6 +26,31 @@ function toggleAddForm() {
     }
 }
 
+//Validación dinamica: reseña y calificacion obligatorias
+function actualizarRequisitos() {
+    const estado = document.getElementById('estado');
+    const cal = document.getElementById('calificacion');
+    const resena = document.getElementById('resena');
+    if (!estado || !cal || !resena) return;
+    const requiere = estado.value !== 'QUIERO_JUGAR';
+    cal.required = requiere;
+    resena.required = requiere;
+    //actualizar placeholders
+    cal.placeholder = requiere ? 'Obligatorio' : 'Opcional';
+    resena.placeholder = requiere
+        ? 'Escribe tu opinión (obligatorio para este estado)...'
+        : 'Escribe tu opinión sobre este juego (opcional)...';
+    //actualizar labels visualmente
+    const calLabel = cal.closest('.form-group')?.querySelector('label');
+    const resLabel = resena.closest('.form-group')?.querySelector('label');
+    if (calLabel) calLabel.innerHTML = requiere
+        ? 'Calificación (1-10) <span class="required-mark">*</span>'
+        : 'Calificación (1-10)';
+    if (resLabel) resLabel.innerHTML = requiere
+        ? '<i class="fas fa-pen"></i> Reseña <span class="required-mark">*</span>'
+        : '<i class="fas fa-pen"></i> Reseña';
+}
+
 //Community Tabs
 function showTab(tabName) {
     //desactivar todos los tabs
@@ -92,5 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.closest('form').submit();
             }
         });
+    }
+    //validacion dinamica del formulario de agregar juego
+    const estadoSelect = document.getElementById('estado');
+    if (estadoSelect) {
+        estadoSelect.addEventListener('change', actualizarRequisitos);
+        actualizarRequisitos(); // Estado inicial
     }
 });

@@ -40,7 +40,8 @@ public class AgregarJuegoServlet extends HttpServlet {
             UsuarioJuego uj = new UsuarioJuego();
             uj.setFkUsuario(idUsuario);
             uj.setFkJuego(Integer.parseInt(idJuegoStr));
-            uj.setEstado(EstadoJuego.valueOf(estadoStr.toUpperCase()));
+            EstadoJuego estado = EstadoJuego.valueOf(estadoStr.toUpperCase());
+            uj.setEstado(estado);
 
             if (idPlataformaStr != null && !idPlataformaStr.isBlank()) {
                 uj.setFkPlataforma(Integer.parseInt(idPlataformaStr));
@@ -59,6 +60,13 @@ public class AgregarJuegoServlet extends HttpServlet {
             String resena = req.getParameter("resena");
             if (resena != null && !resena.isBlank()) {
                 uj.setResena(resena.trim());
+            }
+
+            //validar si no es QUIERO_JUGAR, calificacion y resenia son obligatorias
+            boolean requiereResena = estado != EstadoJuego.QUIERO_JUGAR;
+            if (requiereResena && (uj.getCalificacion() == null || uj.getResena() == null || uj.getResena().isBlank())) {
+                resp.sendRedirect(req.getContextPath() + "/biblioteca?error=Calificacion+y+resena+son+obligatorias+para+este+estado");
+                return;
             }
 
             usuarioJuegoDAO.agregar(uj);

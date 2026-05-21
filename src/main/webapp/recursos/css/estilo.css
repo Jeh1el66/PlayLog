@@ -366,6 +366,12 @@ img {
     color: var(--text-primary);
 }
 
+.required-mark {
+    color: var(--danger);
+    font-weight: 700;
+    margin-left: 2px;
+}
+
 .form-row {
     display: flex;
     gap: 1rem;
