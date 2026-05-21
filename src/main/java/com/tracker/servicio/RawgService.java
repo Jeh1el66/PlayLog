@@ -31,7 +31,7 @@ public class RawgService {
     private final HttpClient httpClient;
 
     public RawgService() {
-        this.apiKey = System.getenv("RAWG_API_KEY") != null ? System.getenv("RAWG_API_KEY") : "";
+        this.apiKey = System.getenv("RAWG_API_KEY");
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();

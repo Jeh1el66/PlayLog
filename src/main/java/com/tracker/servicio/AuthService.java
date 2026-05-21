@@ -19,10 +19,6 @@ public class AuthService {
 
     public AuthService() {
         String secret = System.getenv("JWT_SECRET");
-        if (secret == null || secret.length() < 32) {
-            //clave por defecto de al menos 256 bits para HMAC-SHA256
-            secret = "PlayLogSuperSecretKeyQueDebeSerAlMenos32Chars!!";
-        }
         this.claveSecreta = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
