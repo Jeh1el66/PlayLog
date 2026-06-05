@@ -34,7 +34,8 @@ public class AuthFilter implements Filter {
         String path = req.getServletPath();
 
         //rutas publicas que no requieren autenticacion
-        if (path.equals("/login") || path.equals("/registro") ||
+        if (path.equals("/") || path.equals("/index.jsp") ||
+                path.equals("/login") || path.equals("/registro") ||
             path.startsWith("/recursos/") || path.equals("/favicon.ico")) {
             chain.doFilter(request, response);
             return;

@@ -20,6 +20,6 @@ public class LogoutServlet extends HttpServlet {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         resp.addCookie(cookie);
-        resp.sendRedirect(req.getContextPath() + "/login");
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 }

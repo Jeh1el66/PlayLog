@@ -74,6 +74,7 @@ public class RegistroServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/inicio");
 
         } catch (Exception e) {
+            e.printStackTrace();
             req.setAttribute("error", "Error al registrar usuario.");
             req.getRequestDispatcher("/registro.jsp").forward(req, resp);
         }
